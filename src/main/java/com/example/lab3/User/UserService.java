@@ -1,12 +1,14 @@
 package com.example.lab3.User;
 
-import com.example.lab3.User.UserEntity;
-import com.example.lab3.User.UserShowSettings;
-import org.apache.catalina.User;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +18,22 @@ public class UserService {
 
     @PostConstruct
     private void onCreate(){
-
+//        Type targetClassType = new TypeToken<List<UserEntity>>() {}.getType();
+//        userList = new Gson().fromJson("usersJson/users.json", targetClassType);
     }
 
     @PreDestroy
-    private void onDestroy(){
+    private void onDestroy() throws FileNotFoundException {
+        String usersJsonToSave = new Gson().toJson(userList);
 
+        File file = ResourceUtils.getFile("classpath:resources/static/users.json");
+        try (FileOutputStream fos = new FileOutputStream(file)){
+            PrintWriter pw = new PrintWriter(fos);
+            pw.write(usersJsonToSave);
+            pw.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
 
