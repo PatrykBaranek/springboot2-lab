@@ -1,4 +1,4 @@
-package com.example.lab3.models;
+package com.example.lab3.User;
 
 public class UserEntity {
 
@@ -6,8 +6,13 @@ public class UserEntity {
     private String name;
     private String email;
 
-    public UserEntity(Integer id, String name, String email){
+    public UserEntity(int id, String name, String email) {
         this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
+    public UserEntity(String name, String email) {
         this.name = name;
         this.email = email;
     }

@@ -1,9 +1,9 @@
-package com.example.lab3;
+package com.example.lab3.User;
 
 
-import com.example.lab3.models.UserEntity;
-import com.example.lab3.models.UserShowSettings;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class UserController {
             @RequestParam(defaultValue = "10",required = false) int pagesCount,
             @RequestParam(defaultValue = "95",required = false) int totalCount){
 
-        UserShowSettings userShowSettings = userService.getUsers(pageNumber,pageSize, pagesCount, totalCount);
+        UserShowSettings userShowSettings = userService.getUsers(pageNumber, pageSize, pagesCount, totalCount);
 
         return userShowSettings;
     }
@@ -35,11 +35,11 @@ public class UserController {
 
     )
     @ResponseBody
-    public UserEntity createUser(@RequestBody(required = false) UserEntity user){
+    public UserEntity createUser(@RequestBody UserEntity user){
 
-        userService.createUser(user);
+         UserEntity newUser = userService.createUser(user);
 
-        return user;
+        return newUser;
     }
 
     @GetMapping("api/users/{id}")
@@ -63,16 +63,20 @@ public class UserController {
             @RequestBody UserEntity userUpdatedValues
             ){
 
-        UserEntity user = userList.get(id);
-
-        if(userUpdatedValues.getEmail() != null && userUpdatedValues.getName() != null){
-            return null;
-        }
-        user.setId(user.getId());
-        user.setName(userUpdatedValues.getName());
-        user.setEmail(userUpdatedValues.getEmail());
+        UserEntity user = userService.updateUser(id, userUpdatedValues);
 
         return user;
+    }
+
+    @DeleteMapping("api/users/{id}/delete")
+    @ResponseBody
+    public DeleteResult deleteUser(
+            @PathVariable int id
+    ){
+
+        DeleteResult deletedResult = userService.deleteUser(id);
+
+        return deletedResult;
     }
 
 }
